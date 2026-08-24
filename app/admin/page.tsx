@@ -211,7 +211,9 @@ export default function AdminPage() {
 
   // Load statuses from localStorage and capture origin on mount
   useEffect(() => {
-    setOrigin(window.location.origin);
+    // Use environment variable if available, fallback to browser origin
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || window.location.origin;
+    setOrigin(baseUrl);
     try {
       const raw = localStorage.getItem(LS_KEY);
       if (raw) setStatuses(JSON.parse(raw));
