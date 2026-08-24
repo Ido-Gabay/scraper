@@ -62,14 +62,14 @@ function KpiBar({ statuses }: { statuses: StatusMap }) {
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-8">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
       {kpis.map((k) => (
         <div
           key={k.label}
-          className="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl px-6 py-5 text-center hover:border-slate-700 hover:-translate-y-1 transition-all duration-200 hover:shadow-2xl"
+          className="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl px-6 py-5 text-center hover:border-slate-700/60 hover:-translate-y-1 transition-all duration-200 hover:shadow-2xl shadow-xl"
         >
           <div className={`text-3xl mb-2 font-heebo`}>{k.icon}</div>
-          <p className={`text-3xl font-black text-white`}>{k.value}</p>
+          <p className={`text-3xl font-black text-white font-heebo`}>{k.value}</p>
           <p className="text-xs text-slate-400 mt-2 font-medium font-heebo">{k.label}</p>
         </div>
       ))}
@@ -122,36 +122,36 @@ ${pageUrl}
   })();
 
   return (
-    <div className="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 rounded-2xl p-6 flex flex-col gap-4 hover:border-slate-700 hover:-translate-y-1 transition-all duration-200 hover:shadow-2xl font-heebo">
+    <div className="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-6 flex flex-col gap-4 hover:border-slate-700/60 hover:-translate-y-1 transition-all duration-200 hover:shadow-2xl shadow-xl font-heebo">
       {/* Header with business name and niche tag */}
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex flex-col sm:flex-row items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
-          <h3 className="text-white font-bold text-lg leading-snug truncate">
+          <h3 className="text-white font-bold text-lg leading-snug truncate font-heebo">
             {lead.businessName}
           </h3>
-          <p className="text-slate-400 text-sm mt-1">{lead.contact.phone}</p>
+          <p className="text-slate-400 text-sm mt-1 font-heebo">{lead.contact.phone}</p>
           {lead.contact.address && (
-            <p className="text-slate-500 text-xs mt-1 truncate">{lead.contact.address}</p>
+            <p className="text-slate-500 text-xs mt-1 truncate font-heebo">{lead.contact.address}</p>
           )}
         </div>
-        <span className={`shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border backdrop-blur-sm ${nicheMeta.color}`}>
+        <span className={`shrink-0 text-xs font-semibold px-3 py-1.5 rounded-full border backdrop-blur-sm ${nicheMeta.color} font-heebo`}>
           {nicheMeta.label}
         </span>
       </div>
 
       {/* Rating section */}
       <div className="flex items-center gap-2 pt-1">
-        <span className="text-amber-400 text-sm font-semibold">⭐ {lead.rating}</span>
-        <span className="text-slate-500 text-xs">({lead.reviewCount} ביקורות)</span>
+        <span className="text-amber-400 text-sm font-semibold font-heebo">⭐ {lead.rating}</span>
+        <span className="text-slate-500 text-xs font-heebo">({lead.reviewCount} ביקורות)</span>
       </div>
 
       {/* Status selector with indicator dot */}
-      <div className="flex items-center gap-3 bg-slate-800/30 rounded-lg px-3 py-2.5">
-        <span className={`w-3 h-3 rounded-full shrink-0 ${statusMeta.dot}`} />
+      <div className="flex items-center gap-3 bg-slate-800/50 border border-slate-700/40 rounded-lg px-3 py-2.5 hover:border-slate-700/60 transition-colors">
+        <span className={`w-3 h-3 rounded-full shrink-0 ${statusMeta.dot} animate-pulse`} />
         <select
           value={status}
           onChange={(e) => onStatusChange(lead.slug, e.target.value as Status)}
-          className="flex-1 bg-transparent text-slate-200 text-sm focus:outline-none cursor-pointer font-heebo"
+          className="flex-1 bg-transparent text-slate-200 text-sm focus:outline-none cursor-pointer font-heebo font-medium"
         >
           {STATUSES.map((s) => (
             <option key={s.value} value={s.value} className="bg-slate-900 text-slate-200">
@@ -162,18 +162,18 @@ ${pageUrl}
       </div>
 
       {/* Action buttons */}
-      <div className="grid grid-cols-4 gap-3 pt-2">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
         <a
           href={`/p/${lead.slug}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-1.5 bg-slate-800/50 hover:bg-slate-700 text-slate-200 text-xs font-semibold py-2.5 rounded-lg transition-all duration-200 hover:shadow-lg"
+          className="flex items-center justify-center gap-1.5 bg-slate-800/50 border border-slate-700/40 hover:bg-slate-700 hover:border-slate-700/60 text-slate-200 text-xs font-semibold py-2.5 rounded-lg transition-all duration-200 hover:shadow-lg font-heebo"
         >
-          <span>👁</span> צפה
+          <span>👁</span> <span className="hidden sm:inline">צפה</span>
         </a>
         <button
           onClick={handleCopy}
-          className="flex items-center justify-center gap-1.5 bg-slate-800/50 hover:bg-slate-700 text-slate-200 text-xs font-semibold py-2.5 rounded-lg transition-all duration-200 hover:shadow-lg"
+          className="flex items-center justify-center gap-1.5 bg-slate-800/50 border border-slate-700/40 hover:bg-slate-700 hover:border-slate-700/60 text-slate-200 text-xs font-semibold py-2.5 rounded-lg transition-all duration-200 hover:shadow-lg font-heebo"
           title="העתק קישור לדף"
         >
           <span>{copied ? "✓" : "🔗"}</span>
@@ -181,7 +181,7 @@ ${pageUrl}
         </button>
         <button
           onClick={handleCopyMessage}
-          className="flex items-center justify-center gap-1.5 bg-slate-800/50 hover:bg-slate-700 text-slate-200 text-xs font-semibold py-2.5 rounded-lg transition-all duration-200 hover:shadow-lg"
+          className="flex items-center justify-center gap-1.5 bg-slate-800/50 border border-slate-700/40 hover:bg-slate-700 hover:border-slate-700/60 text-slate-200 text-xs font-semibold py-2.5 rounded-lg transition-all duration-200 hover:shadow-lg font-heebo"
           title="העתק הודעה ל-WhatsApp"
         >
           <span>{messageCopied ? "✓" : "📋"}</span>
@@ -191,9 +191,9 @@ ${pageUrl}
           href={waHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold py-2.5 rounded-lg transition-all duration-200 shadow-lg shadow-emerald-950/40 hover:shadow-emerald-950/60"
+          className="flex items-center justify-center gap-1.5 bg-emerald-500/20 border border-emerald-500/40 hover:bg-emerald-500/30 hover:border-emerald-500/60 text-emerald-300 text-xs font-semibold py-2.5 rounded-lg transition-all duration-200 shadow-lg shadow-emerald-950/30 hover:shadow-emerald-950/50 font-heebo"
         >
-          <span>💬</span> שלח
+          <span>💬</span> <span className="hidden sm:inline">שלח</span>
         </a>
       </div>
     </div>
@@ -241,60 +241,62 @@ export default function AdminPage() {
   }, [search, nicheFilter, statusFilter, statuses]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white font-heebo" dir="rtl">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-white font-heebo" dir="rtl">
       {/* Top bar */}
-      <header className="border-b border-slate-800 bg-slate-900/40 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between gap-4">
+      <header className="border-b border-slate-800/60 bg-slate-900/60 backdrop-blur-xl sticky top-0 z-40 shadow-xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-black tracking-tight">לוח בקרה</h1>
-            <p className="text-xs text-slate-400 mt-0.5">ניהול אתרי לידים</p>
+            <h1 className="text-2xl font-black tracking-tight font-heebo">לוח בקרה</h1>
+            <p className="text-xs text-slate-400 mt-0.5 font-heebo">ניהול אתרי לידים</p>
           </div>
-          <span className="text-xs text-slate-300 bg-slate-800/60 backdrop-blur-sm px-4 py-2 rounded-full font-medium">
+          <span className="text-xs text-slate-300 bg-slate-800/60 backdrop-blur-sm px-4 py-2 rounded-full font-medium border border-slate-700/40 font-heebo">
             {pagesData.length} עסקים
           </span>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
         {/* KPI strip */}
         <KpiBar statuses={statuses} />
 
-        {/* Filters toolbar - unified design */}
-        <div className="bg-slate-900/40 backdrop-blur-md border border-slate-800/60 rounded-2xl p-4 mb-8 flex flex-col sm:flex-row gap-3">
+        {/* Filters toolbar - mobile-first responsive design */}
+        <div className="bg-slate-900/70 backdrop-blur-xl border border-slate-800/80 rounded-2xl p-4 mb-8 flex flex-col gap-3 shadow-xl">
           <input
             type="text"
             placeholder="חיפוש לפי שם עסק..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 bg-slate-800/50 border border-slate-700/60 text-white placeholder-slate-500 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-slate-600 focus:border-slate-600 transition-colors"
+            className="w-full bg-slate-800/50 border border-slate-700/60 text-white placeholder-slate-500 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 transition-all font-heebo"
           />
-          <select
-            value={nicheFilter}
-            onChange={(e) => setNicheFilter(e.target.value)}
-            className="bg-slate-800/50 border border-slate-700/60 text-slate-200 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-slate-600 focus:border-slate-600 cursor-pointer transition-colors"
-          >
-            {NICHE_OPTIONS.map((n) => <option key={n}>{n}</option>)}
-          </select>
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value as "הכל" | Status)}
-            className="bg-slate-800/50 border border-slate-700/60 text-slate-200 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-slate-600 focus:border-slate-600 cursor-pointer transition-colors"
-          >
-            <option value="הכל">כל הסטטוסים</option>
-            {STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
-          </select>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <select
+              value={nicheFilter}
+              onChange={(e) => setNicheFilter(e.target.value)}
+              className="flex-1 bg-slate-800/50 border border-slate-700/60 text-slate-200 text-sm rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 cursor-pointer transition-all font-heebo"
+            >
+              {NICHE_OPTIONS.map((n) => <option key={n}>{n}</option>)}
+            </select>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as "הכל" | Status)}
+              className="flex-1 bg-slate-800/50 border border-slate-700/60 text-slate-200 text-sm rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/60 cursor-pointer transition-all font-heebo"
+            >
+              <option value="הכל">כל הסטטוסים</option>
+              {STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+            </select>
+          </div>
         </div>
 
         {/* Results count */}
-        <p className="text-xs text-slate-500 mb-6 font-medium">
+        <p className="text-xs text-slate-400 mb-6 font-medium font-heebo">
           מציג {filtered.length} מתוך {pagesData.length} עסקים
         </p>
 
         {/* Grid */}
         {filtered.length === 0 ? (
-          <div className="text-center py-24 text-slate-500">לא נמצאו עסקים התואמים את הסינון</div>
+          <div className="text-center py-24 text-slate-500 font-heebo">לא נמצאו עסקים התואמים את הסינון</div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             {filtered.map((lead) => (
               <BusinessCard
                 key={lead.slug}

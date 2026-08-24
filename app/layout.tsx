@@ -10,6 +10,7 @@ const rubik = Rubik({
 const heebo = Heebo({
   variable: "--font-heebo",
   subsets: ["latin", "hebrew"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="he" dir="rtl" className={`${rubik.variable} ${heebo.variable}`}>
-      <body className="antialiased">{children}</body>
+      <body className="antialiased font-heebo">{children}</body>
     </html>
   );
 }
