@@ -17,21 +17,21 @@ export default function FaqAccordion({
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2 sm:space-y-3">
       {items.map((item, i) => (
         <div
           key={i}
-          className={`rounded-xl overflow-hidden border transition-all duration-200 ${theme.serviceCardBorder} ${open === i ? theme.serviceCardBg : theme.testimonialCardBg}`}
+          className={`rounded-lg sm:rounded-xl overflow-hidden border transition-all duration-200 ${theme.serviceCardBorder} ${open === i ? theme.serviceCardBg : theme.testimonialCardBg}`}
         >
           <button
             onClick={() => setOpen(open === i ? null : i)}
-            className="w-full text-right px-6 py-4 flex items-center justify-between gap-4"
+            className="w-full text-right px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3 sm:gap-4"
           >
-            <span className={`font-semibold text-base ${theme.sectionHeadingColor}`}>
+            <span className={`font-semibold text-sm sm:text-base ${theme.sectionHeadingColor}`}>
               {item.q}
             </span>
             <span
-              className={`text-sm shrink-0 transition-transform duration-300 ${theme.eyebrowColor} ${open === i ? "rotate-180" : ""}`}
+              className={`text-xs sm:text-sm shrink-0 transition-transform duration-300 ${theme.eyebrowColor} ${open === i ? "rotate-180" : ""}`}
             >
               ▼
             </span>
@@ -42,7 +42,7 @@ export default function FaqAccordion({
               open === i ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
             }`}
           >
-            <p className={`px-6 pb-5 text-sm leading-relaxed ${theme.bodyTextColor}`}>
+            <p className={`px-4 sm:px-6 pb-4 sm:pb-5 text-xs sm:text-sm leading-relaxed ${theme.bodyTextColor}`}>
               {item.a}
             </p>
           </div>

@@ -51,8 +51,8 @@ function CtaButton({
 }) {
   const base =
     size === "lg"
-      ? "inline-flex items-center gap-3 font-bold text-lg px-9 py-4 rounded-2xl transition-all duration-300 hover:scale-105"
-      : "flex items-center justify-center gap-3 w-full font-bold text-base py-3.5 rounded-xl transition-colors";
+      ? "inline-flex items-center justify-center gap-2 sm:gap-3 font-bold text-base sm:text-lg px-6 sm:px-9 py-3 sm:py-4 rounded-xl sm:rounded-2xl transition-all duration-300 hover:scale-105 w-full sm:w-auto"
+      : "flex items-center justify-center gap-2 w-full font-bold text-sm sm:text-base py-3 sm:py-3.5 rounded-lg sm:rounded-xl transition-colors";
   return (
     <a
       href={href}
@@ -60,7 +60,7 @@ function CtaButton({
       rel="noopener noreferrer"
       className={`${base} ${theme.ctaBg} ${theme.ctaHover} ${theme.ctaText} ${theme.ctaShadow} ${theme.ctaHoverShadow}`}
     >
-      <WhatsAppIcon className={size === "lg" ? "w-6 h-6" : "w-5 h-5"} />
+      <WhatsAppIcon className={size === "lg" ? "w-5 h-5 sm:w-6 sm:h-6" : "w-4 h-4 sm:w-5 sm:h-5"} />
       {label}
     </a>
   );
@@ -70,7 +70,7 @@ function CtaButton({
 
 function Eyebrow({ label, color }: { label: string; color: string }) {
   return (
-    <p className={`text-xs font-bold tracking-[0.2em] uppercase mb-3 ${color}`}>
+    <p className={`text-xs font-bold tracking-[0.15em] sm:tracking-[0.2em] uppercase mb-2 sm:mb-3 ${color}`}>
       {label}
     </p>
   );
@@ -88,7 +88,7 @@ function HeroSection({
   waHref: string;
 }) {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-screen sm:min-h-[90vh] flex items-center justify-center overflow-hidden">
       <Image
         src={lead.heroImage}
         alt={lead.businessName}
@@ -99,29 +99,29 @@ function HeroSection({
       />
       <div className={`absolute inset-0 ${theme.heroOverlay}`} />
 
-      <div className="relative z-10 max-w-4xl mx-auto px-6 py-28 text-center">
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-28 text-center">
         <div
-          className={`inline-flex items-center gap-2 backdrop-blur-md border rounded-full px-5 py-2 mb-7 ${theme.ratingPillBg} ${theme.ratingPillBorder}`}
+          className={`inline-flex items-center gap-1.5 sm:gap-2 backdrop-blur-md border rounded-full px-3 sm:px-5 py-1.5 sm:py-2 mb-4 sm:mb-7 text-xs sm:text-sm ${theme.ratingPillBg} ${theme.ratingPillBorder}`}
         >
-          <span className="text-amber-400 text-base">⭐</span>
-          <span className="text-sm font-semibold text-white tracking-wide">
-            {lead.rating} &middot; {lead.reviewCount} ביקורות בגוגל
+          <span className="text-amber-400 text-sm sm:text-base">⭐</span>
+          <span className="font-semibold text-white tracking-wide">
+            {lead.rating} &middot; {lead.reviewCount} ביקורות
           </span>
         </div>
 
         <Eyebrow label={lead.tagline} color={theme.eyebrowColor} />
 
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-[1.1] text-white mb-6 drop-shadow-lg">
+        <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold tracking-tight leading-[1.1] text-white mb-3 sm:mb-6 drop-shadow-lg">
           {lead.hero.title}
         </h1>
 
-        <p className={`text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed ${theme.heroSubColor}`}>
+        <p className={`text-sm sm:text-lg md:text-xl max-w-2xl mx-auto mb-6 sm:mb-12 leading-relaxed ${theme.heroSubColor}`}>
           {lead.hero.subtitle}
         </p>
 
         <CtaButton href={waHref} label={lead.hero.ctaText} theme={theme} />
 
-        <p className={`mt-7 text-sm ${theme.heroBusinessNameColor}`}>
+        <p className={`mt-4 sm:mt-7 text-xs sm:text-sm ${theme.heroBusinessNameColor}`}>
           {lead.businessName}
         </p>
       </div>
@@ -139,12 +139,12 @@ function ClinicTrustStrip({ theme }: { theme: NicheTheme }) {
     "ייעוץ ראשוני חינמי",
   ];
   return (
-    <div className="bg-teal-600 py-4 px-6">
-      <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-x-8 gap-y-2">
+    <div className="bg-teal-600 py-3 sm:py-4 px-4 sm:px-6">
+      <div className="max-w-5xl mx-auto flex flex-wrap justify-center gap-x-4 sm:gap-x-8 gap-y-2 text-center">
         {items.map((item) => (
-          <span key={item} className="flex items-center gap-2 text-white text-sm font-semibold">
+          <span key={item} className="flex items-center gap-1.5 sm:gap-2 text-white text-xs sm:text-sm font-semibold">
             <span className="text-teal-200">✓</span>
-            {item}
+            <span>{item}</span>
           </span>
         ))}
       </div>
@@ -159,18 +159,18 @@ function CraftProcessSteps({ theme }: { theme: NicheTheme }) {
     { n: "03", title: "התקנה מקצועית", desc: "הצוות מגיע, מתקין, מדייק עם פלס לייזר ולא עוזב עד שהכל מושלם." },
   ];
   return (
-    <section className={`py-20 px-6 ${theme.servicesBg}`}>
+    <section className={`py-12 sm:py-20 px-4 sm:px-6 ${theme.servicesBg}`}>
       <div className="max-w-5xl mx-auto">
         <Eyebrow label="איך זה עובד" color={theme.eyebrowColor} />
-        <h2 className={`text-3xl md:text-4xl font-bold text-center mb-14 ${theme.sectionHeadingColor}`}>
+        <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-14 ${theme.sectionHeadingColor}`}>
           תהליך העבודה שלנו
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
           {steps.map((s) => (
-            <div key={s.n} className="flex flex-col items-center text-center gap-4">
-              <span className={`text-5xl font-black ${theme.eyebrowColor}`}>{s.n}</span>
-              <h3 className={`text-xl font-bold ${theme.sectionHeadingColor}`}>{s.title}</h3>
-              <p className={`text-sm leading-relaxed ${theme.bodyTextColor}`}>{s.desc}</p>
+            <div key={s.n} className="flex flex-col items-center text-center gap-3 sm:gap-4">
+              <span className={`text-4xl sm:text-5xl font-black ${theme.eyebrowColor}`}>{s.n}</span>
+              <h3 className={`text-lg sm:text-xl font-bold ${theme.sectionHeadingColor}`}>{s.title}</h3>
+              <p className={`text-xs sm:text-sm leading-relaxed ${theme.bodyTextColor}`}>{s.desc}</p>
             </div>
           ))}
         </div>
@@ -181,8 +181,8 @@ function CraftProcessSteps({ theme }: { theme: NicheTheme }) {
 
 function FinanceTrustStats({ lead, theme }: { lead: PageData; theme: NicheTheme }) {
   return (
-    <div className="bg-blue-900/30 border-y border-blue-800/30 py-8 px-6">
-      <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+    <div className="bg-blue-900/30 border-y border-blue-800/30 py-6 sm:py-8 px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 text-center">
         {([
           { target: lead.reviewCount, suffix: "+", label: "לקוחות מרוצים" },
           { target: Math.round(lead.rating * 10), suffix: "★", divisor: 10, label: "דירוג בגוגל" },
@@ -190,14 +190,14 @@ function FinanceTrustStats({ lead, theme }: { lead: PageData; theme: NicheTheme 
           { target: 0, suffix: " ₪", label: "עמלה מהבנק" },
         ] as const).map((s, i) => (
           <div key={i}>
-            <p className="text-3xl font-black text-white mb-1">
+            <p className="text-2xl sm:text-3xl font-black text-white mb-1">
               {s.target === 0 ? (
                 <span>0 ₪</span>
               ) : (
                 <AnimatedCounter target={s.target} suffix={s.suffix} />
               )}
             </p>
-            <p className={`text-sm ${theme.sectionSubColor}`}>{s.label}</p>
+            <p className={`text-xs sm:text-sm ${theme.sectionSubColor}`}>{s.label}</p>
           </div>
         ))}
       </div>
@@ -207,8 +207,8 @@ function FinanceTrustStats({ lead, theme }: { lead: PageData; theme: NicheTheme 
 
 function FitnessStatsStrip({ lead, theme }: { lead: PageData; theme: NicheTheme }) {
   return (
-    <div className="bg-lime-500 py-6 px-6">
-      <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+    <div className="bg-lime-500 py-4 sm:py-6 px-4 sm:px-6">
+      <div className="max-w-4xl mx-auto grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 text-center">
         {([
           { target: lead.reviewCount, suffix: "", label: "לקוחות פעילים" },
           { target: Math.round(lead.rating * 10), suffix: "★", label: "דירוג בגוגל" },
@@ -216,10 +216,10 @@ function FitnessStatsStrip({ lead, theme }: { lead: PageData; theme: NicheTheme 
           { target: 7, suffix: "/7", label: "ימי אימון בשבוע" },
         ] as const).map((s, i) => (
           <div key={i}>
-            <p className="text-3xl font-black text-zinc-950 mb-0.5">
+            <p className="text-2xl sm:text-3xl font-black text-zinc-950 mb-0.5">
               <AnimatedCounter target={s.target} suffix={s.suffix} />
             </p>
-            <p className="text-sm font-semibold text-zinc-800">{s.label}</p>
+            <p className="text-xs sm:text-sm font-semibold text-zinc-800">{s.label}</p>
           </div>
         ))}
       </div>
@@ -244,7 +244,7 @@ function UrgencyBanner({ niche, waHref }: { niche: string; waHref: string }) {
       href={waHref}
       target="_blank"
       rel="noopener noreferrer"
-      className={`block w-full text-center py-2.5 px-4 text-sm font-bold text-white tracking-wide hover:brightness-110 transition-all duration-200 ${banner.bg}`}
+      className={`block w-full text-center py-2 sm:py-2.5 px-3 sm:px-4 text-xs sm:text-sm font-bold text-white tracking-wide hover:brightness-110 transition-all duration-200 ${banner.bg}`}
     >
       {banner.text}
     </a>
@@ -280,10 +280,10 @@ const FINANCE_FAQ = [
 
 function FinanceFaqSection({ theme }: { theme: NicheTheme }) {
   return (
-    <section className={`py-20 px-6 ${theme.aboutBg}`}>
+    <section className={`py-12 sm:py-20 px-4 sm:px-6 ${theme.aboutBg}`}>
       <div className="max-w-3xl mx-auto animate-section animate-section-d1">
         <Eyebrow label="שאלות נפוצות" color={`text-center ${theme.eyebrowColor}`} />
-        <h2 className={`text-3xl md:text-4xl font-bold text-center mb-10 ${theme.sectionHeadingColor}`}>
+        <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-10 ${theme.sectionHeadingColor}`}>
           כל מה שרצית לדעת
         </h2>
         <FaqAccordion items={FINANCE_FAQ} theme={theme} />
@@ -296,24 +296,24 @@ function FinanceFaqSection({ theme }: { theme: NicheTheme }) {
 
 function GallerySection({ lead, theme }: { lead: PageData; theme: NicheTheme }) {
   return (
-    <section className={`py-16 px-6 ${theme.pageBg} animate-section`}>
+    <section className={`py-12 sm:py-16 px-4 sm:px-6 ${theme.pageBg} animate-section`}>
       <div className="max-w-6xl mx-auto">
         <Eyebrow label={theme.galleryEyebrow} color={`text-center ${theme.eyebrowColor}`} />
-        <h2 className={`text-3xl md:text-4xl font-bold text-center mb-10 ${theme.sectionHeadingColor}`}>
+        <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-10 ${theme.sectionHeadingColor}`}>
           {theme.galleryTitle}
         </h2>
         {/* aspect-[4/3] on every cell guarantees identical proportions regardless of source image */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-stretch">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 items-stretch">
           {lead.galleryImages.map((img) => (
             <div
               key={img.id}
-              className="group relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-slate-800"
+              className="group relative aspect-[4/3] w-full overflow-hidden rounded-xl sm:rounded-2xl bg-slate-800"
             >
               <Image
                 src={`https://images.unsplash.com/${img.id}?w=800&q=80`}
                 alt={img.alt}
                 fill
-                sizes="(max-width: 768px) 100vw, 33vw"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover group-hover:scale-110 transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-500" />
@@ -329,14 +329,14 @@ function GallerySection({ lead, theme }: { lead: PageData; theme: NicheTheme }) 
 
 function AboutSection({ lead, theme }: { lead: PageData; theme: NicheTheme }) {
   return (
-    <section className={`relative py-24 px-6 overflow-hidden ${theme.aboutBg} animate-section animate-section-d1`}>
+    <section className={`relative py-12 sm:py-24 px-4 sm:px-6 overflow-hidden ${theme.aboutBg} animate-section animate-section-d1`}>
       <div className="relative max-w-3xl mx-auto">
-        <div className={`rounded-3xl p-10 md:p-16 ${theme.aboutCardBg} ${theme.aboutCardBorder}`}>
+        <div className={`rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-16 ${theme.aboutCardBg} ${theme.aboutCardBorder}`}>
           <Eyebrow label={theme.aboutEyebrow} color={theme.eyebrowColor} />
-          <h2 className={`text-3xl md:text-4xl font-bold mb-6 ${theme.sectionHeadingColor}`}>
+          <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-4 sm:mb-6 ${theme.sectionHeadingColor}`}>
             {lead.about.title}
           </h2>
-          <p className={`text-lg leading-relaxed ${theme.bodyTextColor}`}>
+          <p className={`text-base sm:text-lg leading-relaxed ${theme.bodyTextColor}`}>
             {lead.about.description}
           </p>
         </div>
@@ -349,23 +349,23 @@ function AboutSection({ lead, theme }: { lead: PageData; theme: NicheTheme }) {
 
 function ServicesSection({ lead, theme }: { lead: PageData; theme: NicheTheme }) {
   return (
-    <section className={`py-24 px-6 ${theme.servicesBg} animate-section`}>
+    <section className={`py-12 sm:py-24 px-4 sm:px-6 ${theme.servicesBg} animate-section`}>
       <div className="max-w-5xl mx-auto">
         <Eyebrow label={theme.servicesEyebrow} color={`text-center ${theme.eyebrowColor}`} />
-        <h2 className={`text-3xl md:text-4xl font-bold text-center mb-14 ${theme.sectionHeadingColor}`}>
+        <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-14 ${theme.sectionHeadingColor}`}>
           {theme.servicesTitle}
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
           {lead.services.map((service, i) => (
             <div
               key={service.title}
-              className={`rounded-2xl p-8 transition-all duration-300 ${theme.serviceCardBg} ${theme.serviceCardBorder} ${theme.serviceCardHover}`}
+              className={`rounded-xl sm:rounded-2xl p-5 sm:p-8 transition-all duration-300 ${theme.serviceCardBg} ${theme.serviceCardBorder} ${theme.serviceCardHover}`}
             >
               <div
-                className={`w-14 h-14 rounded-xl flex items-center justify-center mb-6 ${theme.serviceIconBg} ${theme.serviceIconBorder}`}
+                className={`w-12 sm:w-14 h-12 sm:h-14 rounded-lg sm:rounded-xl flex items-center justify-center mb-4 sm:mb-6 ${theme.serviceIconBg} ${theme.serviceIconBorder}`}
               >
                 <svg
-                  className={`w-7 h-7 ${theme.serviceIconColor}`}
+                  className={`w-6 sm:w-7 h-6 sm:h-7 ${theme.serviceIconColor}`}
                   fill="none"
                   stroke="currentColor"
                   strokeLinecap="round"
@@ -377,10 +377,10 @@ function ServicesSection({ lead, theme }: { lead: PageData; theme: NicheTheme })
                   <path d={SERVICE_ICON_PATHS[i % SERVICE_ICON_PATHS.length]} />
                 </svg>
               </div>
-              <h3 className={`text-xl font-bold mb-3 ${theme.sectionHeadingColor}`}>
+              <h3 className={`text-lg sm:text-xl font-bold mb-2 sm:mb-3 ${theme.sectionHeadingColor}`}>
                 {service.title}
               </h3>
-              <p className={`leading-relaxed text-sm ${theme.bodyTextColor}`}>
+              <p className={`leading-relaxed text-xs sm:text-sm ${theme.bodyTextColor}`}>
                 {service.description}
               </p>
             </div>
@@ -395,28 +395,28 @@ function ServicesSection({ lead, theme }: { lead: PageData; theme: NicheTheme })
 
 function TestimonialsSection({ lead, theme }: { lead: PageData; theme: NicheTheme }) {
   return (
-    <section className={`py-24 px-6 ${theme.testimonialsBg} animate-section animate-section-d1`}>
+    <section className={`py-12 sm:py-24 px-4 sm:px-6 ${theme.testimonialsBg} animate-section animate-section-d1`}>
       <div className="max-w-5xl mx-auto">
         <Eyebrow label={theme.testimonialsEyebrow} color={`text-center ${theme.eyebrowColor}`} />
-        <h2 className={`text-3xl md:text-4xl font-bold text-center mb-3 ${theme.sectionHeadingColor}`}>
+        <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-2 sm:mb-3 ${theme.sectionHeadingColor}`}>
           מה הלקוחות אומרים
         </h2>
-        <p className={`text-center mb-14 ${theme.sectionSubColor}`}>ביקורות אמיתיות מגוגל</p>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <p className={`text-center mb-8 sm:mb-14 text-xs sm:text-sm ${theme.sectionSubColor}`}>ביקורות אמיתיות מגוגל</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {lead.testimonials.map((t, i) => (
             <div
               key={i}
-              className={`rounded-2xl p-8 flex flex-col ${theme.testimonialCardBg} ${theme.testimonialCardBorder}`}
+              className={`rounded-xl sm:rounded-2xl p-5 sm:p-8 flex flex-col ${theme.testimonialCardBg} ${theme.testimonialCardBorder}`}
             >
-              <div className="flex gap-0.5 mb-5">
+              <div className="flex gap-0.5 mb-3 sm:mb-5">
                 {Array.from({ length: 5 }).map((_, s) => (
                   <StarIcon key={s} />
                 ))}
               </div>
-              <p className={`leading-relaxed text-base flex-1 ${theme.bodyTextColor}`}>
+              <p className={`leading-relaxed text-sm sm:text-base flex-1 ${theme.bodyTextColor}`}>
                 &ldquo;{t.quote}&rdquo;
               </p>
-              <p className={`mt-5 text-sm font-semibold border-t pt-4 ${theme.sectionSubColor} border-current/10`}>
+              <p className={`mt-3 sm:mt-5 text-xs sm:text-sm font-semibold border-t pt-3 sm:pt-4 ${theme.sectionSubColor} border-current/10`}>
                 — {t.author}
               </p>
             </div>
@@ -439,22 +439,22 @@ function ContactSection({
   waHref: string;
 }) {
   return (
-    <section className={`relative py-24 px-6 ${theme.contactBg}`}>
+    <section className={`relative py-12 sm:py-24 px-4 sm:px-6 ${theme.contactBg}`}>
       <div className="relative max-w-2xl mx-auto text-center">
         <Eyebrow label={theme.contactEyebrow} color={`text-center ${theme.eyebrowColor}`} />
-        <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${theme.sectionHeadingColor}`}>
+        <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-4 ${theme.sectionHeadingColor}`}>
           צרו קשר
         </h2>
-        <p className={`mb-10 ${theme.contactSubColor}`}>נשמח לענות על כל שאלה ולתאם</p>
+        <p className={`mb-6 sm:mb-10 text-sm sm:text-base ${theme.contactSubColor}`}>נשמח לענות על כל שאלה ולתאם</p>
 
-        <div className={`flex flex-col items-center gap-3 mb-10 ${theme.contactInfoColor}`}>
+        <div className={`flex flex-col items-center gap-2 sm:gap-3 mb-6 sm:mb-10 text-sm sm:text-base ${theme.contactInfoColor}`}>
           {lead.contact.address && (
-            <p className="flex items-center gap-2">
+            <p className="flex items-center gap-1.5 sm:gap-2">
               <span aria-hidden="true">📍</span>
               {lead.contact.address}
             </p>
           )}
-          <p className="flex items-center gap-2">
+          <p className="flex items-center gap-1.5 sm:gap-2">
             <span aria-hidden="true">📞</span>
             <a
               href={`tel:${lead.contact.phone}`}
@@ -485,11 +485,11 @@ function StickyBar({
   return (
     <>
       <div
-        className={`fixed bottom-0 inset-x-0 z-50 md:hidden backdrop-blur-sm border-t px-4 py-3 shadow-2xl ${theme.stickyBg} ${theme.stickyBorder}`}
+        className={`fixed bottom-0 inset-x-0 z-50 md:hidden backdrop-blur-sm border-t px-3 sm:px-4 py-2.5 sm:py-3 shadow-2xl ${theme.stickyBg} ${theme.stickyBorder}`}
       >
         <CtaButton href={waHref} label={lead.hero.ctaText} theme={theme} size="sm" />
       </div>
-      <div className="h-20 md:hidden" />
+      <div className="h-16 sm:h-20 md:hidden" />
     </>
   );
 }
