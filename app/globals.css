@@ -21,10 +21,6 @@ body {
 }
 
 /* ── Smooth transitions for interactive elements ── */
-* {
-  @apply transition-colors duration-200;
-}
-
 input:focus, select:focus, button:focus, a:focus {
   @apply outline-none;
 }
@@ -84,31 +80,4 @@ input:focus, select:focus, button:focus, a:focus {
 /* ── Performance optimization ── */
 .virtuoso-scroller {
   will-change: scroll-position;
-}
-
-/* GPU acceleration for animations */
-@supports (transform: translateZ(0)) {
-  .will-change-transform {
-    will-change: transform;
-  }
-}
-
-/* Smooth scrolling for virtualized lists */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Optimize animations with will-change */
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  will-change: opacity;
 }
