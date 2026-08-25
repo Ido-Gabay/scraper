@@ -24,14 +24,6 @@ const STATUSES: { value: Status; label: string; dot: string; ring: string }[] = 
   { value: "irrelevant",  label: "לא רלוונטי",     dot: "bg-red-400",     ring: "ring-red-400/30"     },
 ];
 
-const STATUS_BADGE: Record<Status, string> = {
-  new:         "text-slate-300 bg-slate-800 border-slate-700",
-  sent:        "text-blue-300 bg-blue-950 border-blue-800",
-  negotiating: "text-amber-300 bg-amber-950 border-amber-800",
-  closed:      "text-emerald-300 bg-emerald-950 border-emerald-800",
-  irrelevant:  "text-red-300 bg-red-950 border-red-900",
-};
-
 const NICHE_META: Record<string, { label: string; color: string; bg: string }> = {
   clinic:      { label: "קליניקה",     color: "text-teal-300",   bg: "bg-teal-500/10 border-teal-500/25"   },
   photography: { label: "צילום",       color: "text-rose-300",   bg: "bg-rose-500/10 border-rose-500/25"   },
@@ -62,10 +54,10 @@ function KpiCard({
   label: string; value: string | number; sub?: string; accent: string;
 }) {
   return (
-    <div className={`relative overflow-hidden rounded-2xl border bg-slate-900 p-5 flex flex-col gap-1 ${accent}`}>
-      <p className="text-xs font-medium text-slate-400 font-heebo">{label}</p>
-      <p className="text-3xl font-black text-white tracking-tight font-heebo">{value}</p>
-      {sub && <p className="text-xs text-slate-500 font-heebo">{sub}</p>}
+    <div className={`relative overflow-hidden rounded-xl border bg-slate-900 px-4 py-3.5 flex flex-col gap-0.5 ${accent}`}>
+      <p className="text-[11px] font-medium text-slate-500 font-heebo leading-none">{label}</p>
+      <p className="text-2xl font-black text-white tracking-tight font-heebo leading-tight">{value}</p>
+      {sub && <p className="text-[10px] text-slate-600 font-heebo">{sub}</p>}
     </div>
   );
 }
@@ -92,7 +84,7 @@ function PipelineBar({ statuses }: { statuses: StatusMap }) {
   ];
 
   return (
-    <div className="flex h-1.5 w-full rounded-full overflow-hidden gap-px">
+    <div className="flex h-1 w-full rounded-full overflow-hidden gap-px">
       {segments.map((s) =>
         s.pct > 0 ? (
           <div
@@ -118,29 +110,29 @@ function KpiStrip({ statuses }: { statuses: StatusMap }) {
   const convPct  = pipeline > 0 ? Math.round((closed / pipeline) * 100) : 0;
 
   return (
-    <div className="space-y-4 mb-8">
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        <KpiCard label='סה"כ עסקים'  value={total}        accent="border-slate-800"                                       />
-        <KpiCard label="נשלחו ללקוח" value={sent}         accent="border-blue-900/60"    sub={sent > 0 ? `מתוך ${total}` : undefined} />
-        <KpiCard label="במשא ומתן"   value={nego}         accent="border-amber-900/60"                                    />
-        <KpiCard label="נסגרו"       value={closed}       accent="border-emerald-900/60" sub={closed > 0 ? "💰 הכנסה" : undefined}    />
-        <KpiCard label="יחס המרה"    value={`${convPct}%`} accent="border-slate-800"     sub="מהפייפליין"                 />
+    <div className="space-y-3 mb-6">
+      {/* 3-col on mobile, 5-col on lg+ */}
+      <div className="grid grid-cols-3 lg:grid-cols-5 gap-2">
+        <KpiCard label='סה"כ עסקים'  value={total}         accent="border-slate-800" />
+        <KpiCard label="נשלחו"        value={sent}          accent="border-blue-900/60" />
+        <KpiCard label="במשא ומתן"    value={nego}          accent="border-amber-900/60" />
+        <KpiCard label="נסגרו"        value={closed}        accent="border-emerald-900/60" sub={closed > 0 ? "💰" : undefined} />
+        <KpiCard label="המרה"         value={`${convPct}%`} accent="border-slate-800" sub="מפייפליין" />
       </div>
-      <div className="space-y-1.5">
-        <PipelineBar statuses={statuses} />
-        <div className="flex gap-4 flex-wrap">
-          {STATUSES.map((s) => {
-            const count = s.value === "new"
-              ? vals.filter((v) => v === "new").length + (total - vals.length)
-              : vals.filter((v) => v === s.value).length;
-            return (
-              <span key={s.value} className="flex items-center gap-1.5 text-xs text-slate-500 font-heebo">
-                <span className={`w-2 h-2 rounded-full ${s.dot}`} />
-                {s.label} ({count})
-              </span>
-            );
-          })}
-        </div>
+      {/* Pipeline bar + compact legend */}
+      <PipelineBar statuses={statuses} />
+      <div className="flex gap-3 flex-wrap">
+        {STATUSES.map((s) => {
+          const count = s.value === "new"
+            ? vals.filter((v) => v === "new").length + (total - vals.length)
+            : vals.filter((v) => v === s.value).length;
+          return (
+            <span key={s.value} className="flex items-center gap-1 text-[10px] text-slate-600 font-heebo">
+              <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
+              {s.label.split(" ")[0]} {count}
+            </span>
+          );
+        })}
       </div>
     </div>
   );
@@ -193,47 +185,49 @@ ${pageUrl}
                                   "bg-gradient-to-r from-lime-500 to-lime-400"
       }`} />
 
-      <div className="p-5 flex flex-col gap-4 flex-1">
-        {/* Header row */}
+      <div className="p-4 flex flex-col gap-3 flex-1">
+        {/* Header row — niche pill top-right, name below */}
         <div className="flex items-start justify-between gap-2">
           <div className="flex-1 min-w-0">
-            <h3 className="text-white font-bold text-base leading-tight truncate font-heebo">
+            <h3 className="text-white font-bold text-base leading-snug font-heebo line-clamp-2">
               {lead.businessName}
             </h3>
-            <p className="text-slate-400 text-sm mt-0.5 font-heebo tabular-nums">{lead.contact.phone}</p>
           </div>
           <span className={`shrink-0 text-[11px] font-semibold px-2.5 py-1 rounded-full border ${nicheMeta.bg} ${nicheMeta.color} font-heebo`}>
             {nicheMeta.label}
           </span>
         </div>
 
-        {/* Address */}
-        {lead.contact.address && (
-          <p className="text-slate-500 text-xs truncate font-heebo -mt-2">
-            📍 {lead.contact.address}
-          </p>
-        )}
+        {/* Phone + address compact row */}
+        <div className="flex flex-col gap-0.5">
+          <a href={`tel:${lead.contact.phone}`} className="text-slate-400 text-sm font-heebo tabular-nums hover:text-white transition-colors">
+            {lead.contact.phone}
+          </a>
+          {lead.contact.address && (
+            <p className="text-slate-600 text-xs truncate font-heebo">📍 {lead.contact.address}</p>
+          )}
+        </div>
 
-        {/* Rating */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1">
+        {/* Rating row */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-0.5">
             {Array.from({ length: 5 }).map((_, i) => (
-              <svg key={i} className={`w-3.5 h-3.5 ${i < Math.round(lead.rating) ? "text-amber-400" : "text-slate-700"}`} fill="currentColor" viewBox="0 0 20 20">
+              <svg key={i} className={`w-3 h-3 ${i < Math.round(lead.rating) ? "text-amber-400" : "text-slate-800"}`} fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
             ))}
           </div>
           <span className="text-amber-400 text-xs font-bold font-heebo">{lead.rating}</span>
-          <span className="text-slate-600 text-xs font-heebo">({lead.reviewCount})</span>
+          <span className="text-slate-700 text-xs font-heebo">({lead.reviewCount})</span>
         </div>
 
-        {/* Status selector */}
-        <div className={`flex items-center gap-2.5 rounded-xl px-3 py-2 ring-1 bg-slate-800/60 ${statusMeta.ring} transition-all duration-150`}>
+        {/* Status selector — full width, thumb-friendly */}
+        <div className={`flex items-center gap-2 rounded-xl px-3 py-2.5 ring-1 bg-slate-800/60 ${statusMeta.ring} transition-all duration-150`}>
           <span className={`w-2 h-2 rounded-full shrink-0 ${statusMeta.dot}`} />
           <select
             value={status}
             onChange={(e) => onStatusChange(lead.slug, e.target.value as Status)}
-            className="flex-1 bg-transparent text-slate-200 text-sm focus:outline-none cursor-pointer font-heebo font-medium"
+            className="flex-1 bg-transparent text-slate-200 text-sm focus:outline-none cursor-pointer font-heebo font-medium min-w-0"
           >
             {STATUSES.map((s) => (
               <option key={s.value} value={s.value} className="bg-slate-900 text-slate-200">
@@ -241,69 +235,60 @@ ${pageUrl}
               </option>
             ))}
           </select>
-          {/* Status badge */}
-          <span className={`shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full border font-heebo ${STATUS_BADGE[status]}`}>
-            {statusMeta.label}
-          </span>
         </div>
 
-        {/* Spacer */}
-        <div className="flex-1" />
-
-        {/* Action buttons */}
-        <div className="grid grid-cols-4 gap-2">
-          <a
-            href={`/p/${lead.slug}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            title="צפה בדף"
-            className="flex flex-col items-center justify-center gap-0.5 bg-slate-800 hover:bg-slate-700 border border-slate-700/50 text-slate-400 hover:text-slate-200 py-2.5 rounded-xl transition-colors duration-150 font-heebo"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-            <span className="text-[10px]">צפה</span>
-          </a>
-          <button
-            onClick={handleCopy}
-            title="העתק קישור"
-            className={`flex flex-col items-center justify-center gap-0.5 border py-2.5 rounded-xl transition-colors duration-150 font-heebo ${
-              copied
-                ? "bg-emerald-900/40 border-emerald-700/50 text-emerald-400"
-                : "bg-slate-800 hover:bg-slate-700 border-slate-700/50 text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            {copied ? (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-            ) : (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
-            )}
-            <span className="text-[10px]">{copied ? "הועתק" : "קישור"}</span>
-          </button>
-          <button
-            onClick={handleCopyMessage}
-            title="העתק הודעת WA"
-            className={`flex flex-col items-center justify-center gap-0.5 border py-2.5 rounded-xl transition-colors duration-150 font-heebo ${
-              messageCopied
-                ? "bg-emerald-900/40 border-emerald-700/50 text-emerald-400"
-                : "bg-slate-800 hover:bg-slate-700 border-slate-700/50 text-slate-400 hover:text-slate-200"
-            }`}
-          >
-            {messageCopied ? (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-            ) : (
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
-            )}
-            <span className="text-[10px]">{messageCopied ? "הועתק" : "הודעה"}</span>
-          </button>
+        {/* Action buttons — 2 rows on mobile: WA full-width top, 3 secondary below */}
+        <div className="flex flex-col gap-2 pt-1">
+          {/* WhatsApp — primary CTA, full width */}
           <a
             href={waHref}
             target="_blank"
             rel="noopener noreferrer"
-            title="שלח ב-WhatsApp"
-            className="flex flex-col items-center justify-center gap-0.5 bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-xl transition-colors duration-150 font-heebo shadow-lg shadow-emerald-950/50"
+            className="flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white py-3 rounded-xl transition-colors duration-150 font-heebo font-semibold text-sm shadow-lg shadow-emerald-950/40"
           >
             <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            <span className="text-[10px]">שלח</span>
+            שלח ב-WhatsApp
           </a>
+          {/* Secondary actions row */}
+          <div className="grid grid-cols-3 gap-2">
+            <a
+              href={`/p/${lead.slug}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-1.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border border-slate-700/50 text-slate-300 text-xs font-semibold py-2.5 rounded-xl transition-colors duration-150 font-heebo"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+              צפה
+            </a>
+            <button
+              onClick={handleCopy}
+              className={`flex items-center justify-center gap-1.5 border text-xs font-semibold py-2.5 rounded-xl transition-colors duration-150 font-heebo ${
+                copied
+                  ? "bg-emerald-900/40 border-emerald-700/50 text-emerald-400"
+                  : "bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border-slate-700/50 text-slate-300"
+              }`}
+            >
+              {copied
+                ? <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                : <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+              }
+              {copied ? "הועתק" : "קישור"}
+            </button>
+            <button
+              onClick={handleCopyMessage}
+              className={`flex items-center justify-center gap-1.5 border text-xs font-semibold py-2.5 rounded-xl transition-colors duration-150 font-heebo ${
+                messageCopied
+                  ? "bg-emerald-900/40 border-emerald-700/50 text-emerald-400"
+                  : "bg-slate-800 hover:bg-slate-700 active:bg-slate-600 border-slate-700/50 text-slate-300"
+              }`}
+            >
+              {messageCopied
+                ? <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                : <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+              }
+              {messageCopied ? "הועתק" : "הודעה"}
+            </button>
+          </div>
         </div>
       </div>
     </article>
@@ -324,7 +309,7 @@ function Toolbar({
   total: number; filtered: number;
 }) {
   return (
-    <div className="flex flex-col gap-3 mb-6">
+    <div className="flex flex-col gap-2.5 mb-5">
       {/* Search */}
       <div className="relative">
         <svg className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -335,24 +320,23 @@ function Toolbar({
           placeholder="חיפוש לפי שם עסק..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full bg-slate-900 border border-slate-800 hover:border-slate-700 focus:border-slate-600 text-white placeholder-slate-500 rounded-xl pr-10 pl-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-slate-600/50 transition-colors font-heebo"
+          className="w-full bg-slate-900 border border-slate-800 hover:border-slate-700 focus:border-slate-600 text-white placeholder-slate-600 rounded-xl pr-10 pl-10 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-slate-700/50 transition-colors font-heebo"
         />
         {search && (
-          <button onClick={() => setSearch("")} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors">
+          <button onClick={() => setSearch("")} className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-slate-500 hover:text-slate-300 transition-colors">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         )}
       </div>
 
-      {/* Filter pills row */}
-      <div className="flex flex-col sm:flex-row gap-2">
-        {/* Niche filter */}
-        <div className="flex gap-1.5 flex-wrap">
+      {/* Niche filter — horizontally scrollable, no wrap */}
+      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex gap-1.5 w-max sm:w-auto sm:flex-wrap">
           {NICHE_OPTIONS.map((n) => (
             <button
               key={n}
               onClick={() => setNicheFilter(n)}
-              className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors duration-150 font-heebo ${
+              className={`text-xs font-medium px-3.5 py-2 rounded-lg border whitespace-nowrap transition-colors duration-150 font-heebo ${
                 nicheFilter === n
                   ? "bg-white text-slate-900 border-white"
                   : "bg-transparent text-slate-400 border-slate-800 hover:border-slate-700 hover:text-slate-300"
@@ -362,14 +346,16 @@ function Toolbar({
             </button>
           ))}
         </div>
+      </div>
 
-        <div className="sm:mr-auto flex gap-1.5 flex-wrap">
-          {/* Status filter */}
+      {/* Status filter — horizontally scrollable, no wrap */}
+      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div className="flex gap-1.5 w-max sm:w-auto sm:flex-wrap">
           {([{ value: "הכל", label: "כל הסטטוסים" }, ...STATUSES.map(s => ({ value: s.value, label: s.label }))] as { value: string; label: string }[]).map((s) => (
             <button
               key={s.value}
               onClick={() => setStatusFilter(s.value as "הכל" | Status)}
-              className={`text-xs font-medium px-3 py-1.5 rounded-lg border transition-colors duration-150 font-heebo ${
+              className={`text-xs font-medium px-3.5 py-2 rounded-lg border whitespace-nowrap transition-colors duration-150 font-heebo ${
                 statusFilter === s.value
                   ? "bg-slate-700 text-white border-slate-600"
                   : "bg-transparent text-slate-500 border-slate-800 hover:border-slate-700 hover:text-slate-400"
@@ -382,9 +368,19 @@ function Toolbar({
       </div>
 
       {/* Results count */}
-      <p className="text-xs text-slate-600 font-heebo">
-        {filtered === total ? `${total} עסקים` : `${filtered} מתוך ${total}`}
-      </p>
+      {(search || nicheFilter !== "הכל" || statusFilter !== "הכל") && (
+        <div className="flex items-center justify-between">
+          <p className="text-xs text-slate-600 font-heebo">
+            {filtered === total ? `${total} עסקים` : `${filtered} מתוך ${total}`}
+          </p>
+          <button
+            onClick={() => { setSearch(""); setNicheFilter("הכל"); setStatusFilter("הכל"); }}
+            className="text-xs text-slate-600 hover:text-slate-400 font-heebo transition-colors"
+          >
+            נקה סינון ×
+          </button>
+        </div>
+      )}
     </div>
   );
 }
