@@ -25,58 +25,6 @@ input:focus, select:focus, button:focus, a:focus {
   @apply outline-none;
 }
 
-/* ── Section fade-in on load ── */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-section {
-  animation: fadeInUp 0.65s ease-out both;
-}
-
-.animate-section-d1 {
-  animation-delay: 0.1s;
-}
-
-.animate-section-d2 {
-  animation-delay: 0.2s;
-}
-
-.animate-section-d3 {
-  animation-delay: 0.3s;
-}
-
-.animate-section-d4 {
-  animation-delay: 0.4s;
-}
-
-/* ── WhatsApp floating button pulse ── */
-@keyframes wa-pulse {
-  0% {
-    box-shadow: 0 0 0 0px rgba(34, 197, 94, 0.55);
-  }
-
-  70% {
-    box-shadow: 0 0 0 16px rgba(34, 197, 94, 0);
-  }
-
-  100% {
-    box-shadow: 0 0 0 0px rgba(34, 197, 94, 0);
-  }
-}
-
-.wa-float-btn {
-  animation: wa-pulse 2.4s ease-out infinite;
-}
-
 /* ── Performance optimization ── */
 .virtuoso-scroller {
   will-change: scroll-position;
