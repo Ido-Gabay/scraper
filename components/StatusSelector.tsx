@@ -23,17 +23,18 @@ export function StatusSelector({
   const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
+  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0, width: 0 });
 
   const selectedStatus = STATUSES.find((s) => s.value === value) || STATUSES[0];
 
-  // Calculate menu position when opening
-  useEffect(() => {
+  // Calculate menu position when opening or on scroll/resize
+  const updateMenuPosition = useCallback(() => {
     if (open && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
       setMenuPosition({
         top: rect.bottom + 8,
-        right: window.innerWidth - rect.right,
+        left: rect.left,
+        width: rect.width,
       });
     }
   }, [open]);
@@ -41,6 +42,26 @@ export function StatusSelector({
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    updateMenuPosition();
+  }, [open, updateMenuPosition]);
+
+  // Update position on scroll and resize
+  useEffect(() => {
+    if (!open) return;
+
+    const handleScroll = updateMenuPosition;
+    const handleResize = updateMenuPosition;
+
+    window.addEventListener('scroll', handleScroll, true);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [open, updateMenuPosition]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -136,11 +157,11 @@ export function StatusSelector({
       {/* Dropdown Menu — Rendered via Portal to avoid overflow: hidden */}
       {mounted && open && createPortal(
         <div
-          className="fixed z-50 w-full min-w-max animate-in fade-in slide-in-from-top-2 duration-150"
+          className="fixed z-50 min-w-max animate-in fade-in slide-in-from-top-2 duration-150"
           style={{
             top: `${menuPosition.top}px`,
-            right: `${menuPosition.right}px`,
-            maxWidth: buttonRef.current ? `${buttonRef.current.offsetWidth}px` : '100%',
+            left: `${menuPosition.left}px`,
+            width: `${menuPosition.width}px`,
           }}
         >
           <div className="rounded-xl bg-slate-800/95 border border-slate-700/50 overflow-hidden shadow-lg shadow-black/40 backdrop-blur-sm">
