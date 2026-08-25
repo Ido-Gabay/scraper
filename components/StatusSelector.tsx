@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import type { BusinessStatus } from '@/lib/supabaseClient';
 
 const STATUSES: { value: BusinessStatus; label: string; dot: string }[] = [
@@ -19,10 +20,27 @@ export function StatusSelector({
   onChange: (status: BusinessStatus) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const [menuPosition, setMenuPosition] = useState({ top: 0, right: 0 });
 
   const selectedStatus = STATUSES.find((s) => s.value === value) || STATUSES[0];
+
+  // Calculate menu position when opening
+  useEffect(() => {
+    if (open && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setMenuPosition({
+        top: rect.bottom + 8,
+        right: window.innerWidth - rect.right,
+      });
+    }
+  }, [open]);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -79,6 +97,11 @@ export function StatusSelector({
     }
   }, [open, value, onChange]);
 
+  const handleSelect = useCallback((status: BusinessStatus) => {
+    onChange(status);
+    setOpen(false);
+  }, [onChange]);
+
   return (
     <div ref={containerRef} className="relative w-full">
       {/* Trigger Button */}
@@ -110,23 +133,27 @@ export function StatusSelector({
         </svg>
       </button>
 
-      {/* Dropdown Menu */}
-      {open && (
-        <div className="absolute right-0 top-full z-50 mt-2 w-full min-w-max animate-in fade-in slide-in-from-top-2 duration-150">
+      {/* Dropdown Menu — Rendered via Portal to avoid overflow: hidden */}
+      {mounted && open && createPortal(
+        <div
+          className="fixed z-50 w-full min-w-max animate-in fade-in slide-in-from-top-2 duration-150"
+          style={{
+            top: `${menuPosition.top}px`,
+            right: `${menuPosition.right}px`,
+            maxWidth: buttonRef.current ? `${buttonRef.current.offsetWidth}px` : '100%',
+          }}
+        >
           <div className="rounded-xl bg-slate-800/95 border border-slate-700/50 overflow-hidden shadow-lg shadow-black/40 backdrop-blur-sm">
             <div className="py-1.5">
-              {STATUSES.map((status, idx) => (
+              {STATUSES.map((status) => (
                 <button
                   key={status.value}
-                  onClick={() => {
-                    onChange(status.value);
-                    setOpen(false);
-                  }}
+                  onClick={() => handleSelect(status.value)}
                   className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-sm text-left font-heebo transition-colors duration-100 ${
                     value === status.value
                       ? 'bg-slate-700 text-white font-semibold'
                       : 'text-slate-300 hover:bg-slate-700/60 hover:text-white'
-                  } ${idx > 0 ? '' : ''}`}
+                  }`}
                   role="option"
                   aria-selected={value === status.value}
                 >
@@ -151,7 +178,8 @@ export function StatusSelector({
               ))}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
