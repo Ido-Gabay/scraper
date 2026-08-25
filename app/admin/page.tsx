@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import pagesData from "@/data/pages_data.json";
 import { detectNiche } from "@/lib/niche";
 import { getSupabase } from "@/lib/supabaseClient";
+import { StatusSelector } from "@/components/StatusSelector";
 import type { BusinessStatus } from "@/lib/supabaseClient";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -220,20 +221,10 @@ ${pageUrl}
         </div>
 
         {/* Status selector — full width, thumb-friendly */}
-        <div className={`flex items-center gap-2 rounded-xl px-3 py-2.5 ring-1 bg-slate-800/60 ${statusMeta.ring} transition-all duration-150`}>
-          <span className={`w-2 h-2 rounded-full shrink-0 ${statusMeta.dot}`} />
-          <select
-            value={status}
-            onChange={(e) => onStatusChange(lead.slug, e.target.value as Status)}
-            className="flex-1 bg-transparent text-slate-200 text-sm focus:outline-none cursor-pointer font-heebo font-medium min-w-0"
-          >
-            {STATUSES.map((s) => (
-              <option key={s.value} value={s.value} className="bg-slate-900 text-slate-200">
-                {s.label}
-              </option>
-            ))}
-          </select>
-        </div>
+        <StatusSelector
+          value={status}
+          onChange={(newStatus) => onStatusChange(lead.slug, newStatus)}
+        />
 
         {/* Action buttons — 2 rows on mobile: WA full-width top, 3 secondary below */}
         <div className="flex flex-col gap-2 pt-1">
