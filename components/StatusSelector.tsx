@@ -31,13 +31,39 @@ export function StatusSelector({
   const updateMenuPosition = useCallback(() => {
     if (open && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
+      const menuWidth = 280; // approximate dropdown width
+      const padding = 8;
+      
+      // Calculate optimal horizontal position
+      let left = rect.left;
+      
+      // If menu would go off-screen to the right, align to right edge of button
+      if (rect.left + menuWidth > window.innerWidth - padding) {
+        left = window.innerWidth - menuWidth - padding;
+      }
+      
+      // Make sure menu doesn't go off-screen to the left
+      if (left < padding) {
+        left = padding;
+      }
+
+      // Calculate vertical position (below button)
+      let top = rect.bottom + 8;
+      
+      // If menu would go off-screen at bottom, position above button
+      const menuHeight = STATUSES.length * 44 + 12; // approximate height
+      if (top + menuHeight > window.innerHeight - padding) {
+        top = rect.top - menuHeight - 8;
+      }
+
       setMenuPosition({
-        top: rect.bottom + 8,
-        left: rect.left,
-        width: rect.width,
+        top,
+        left,
+        width: Math.max(rect.width, 200),
       });
     }
   }, [open]);
+
 
   useEffect(() => {
     setMounted(true);
