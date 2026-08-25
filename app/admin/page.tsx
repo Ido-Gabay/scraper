@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import pagesData from "@/data/pages_data.json";
 import { detectNiche } from "@/lib/niche";
 import { getSupabase } from "@/lib/supabaseClient";
+import { copyToClipboard } from "@/lib/clipboard";
 import { StatusSelector } from "@/components/StatusSelector";
 import type { BusinessStatus } from "@/lib/supabaseClient";
 
@@ -152,7 +153,7 @@ function BusinessCard({
   const pageUrl    = `${origin}/p/${lead.slug}`;
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(pageUrl);
+    await copyToClipboard(pageUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
@@ -165,7 +166,7 @@ ${pageUrl}
 הדף באוויר לזמן מוגבל לצורך התרשמות. אם תרצו להעלות אותו באופן קבוע לרשת תחת הדומיין שלכם — סמסו לי חזרה ונרים אותו יחד בלחיצת כפתור!`;
 
   const handleCopyMessage = async () => {
-    await navigator.clipboard.writeText(waMessage);
+    await copyToClipboard(waMessage);
     setMessageCopied(true);
     setTimeout(() => setMessageCopied(false), 1800);
   };
