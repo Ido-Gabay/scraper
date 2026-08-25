@@ -54,10 +54,10 @@ function KpiCard({
   label: string; value: string | number; sub?: string; accent: string;
 }) {
   return (
-    <div className={`relative overflow-hidden rounded-xl border bg-slate-900 px-4 py-3.5 flex flex-col gap-0.5 ${accent}`}>
-      <p className="text-[11px] font-medium text-slate-500 font-heebo leading-none">{label}</p>
-      <p className="text-2xl font-black text-white tracking-tight font-heebo leading-tight">{value}</p>
-      {sub && <p className="text-[10px] text-slate-600 font-heebo">{sub}</p>}
+    <div className={`relative overflow-hidden rounded-2xl border bg-gradient-to-br from-slate-800 to-slate-900 px-5 py-5 flex flex-col gap-1 ${accent} hover:from-slate-700 transition-colors duration-200`}>
+      <p className="text-xs font-medium text-slate-400 font-heebo leading-none uppercase tracking-wide">{label}</p>
+      <p className="text-4xl font-black text-white tracking-tight font-heebo leading-none">{value}</p>
+      {sub && <p className="text-xs text-slate-500 font-heebo pt-1">{sub}</p>}
     </div>
   );
 }
@@ -76,24 +76,35 @@ function PipelineBar({ statuses }: { statuses: StatusMap }) {
   };
 
   const segments = [
-    { key: "new",         pct: (counts.new / total) * 100,         color: "bg-slate-600"   },
-    { key: "sent",        pct: (counts.sent / total) * 100,        color: "bg-blue-500"    },
-    { key: "negotiating", pct: (counts.negotiating / total) * 100, color: "bg-amber-500"   },
-    { key: "closed",      pct: (counts.closed / total) * 100,      color: "bg-emerald-500" },
-    { key: "irrelevant",  pct: (counts.irrelevant / total) * 100,  color: "bg-red-500"     },
+    { key: "new",         pct: (counts.new / total) * 100,         color: "bg-slate-600",   label: "חדש" },
+    { key: "sent",        pct: (counts.sent / total) * 100,        color: "bg-blue-500",    label: "נשלח" },
+    { key: "negotiating", pct: (counts.negotiating / total) * 100, color: "bg-amber-500",   label: "משא ומתן" },
+    { key: "closed",      pct: (counts.closed / total) * 100,      color: "bg-emerald-500", label: "נסגר" },
+    { key: "irrelevant",  pct: (counts.irrelevant / total) * 100,  color: "bg-red-500",     label: "לא רלוונטי" },
   ];
 
   return (
-    <div className="flex h-1 w-full rounded-full overflow-hidden gap-px">
-      {segments.map((s) =>
-        s.pct > 0 ? (
-          <div
-            key={s.key}
-            className={`${s.color} transition-all duration-500`}
-            style={{ width: `${s.pct}%` }}
-          />
-        ) : null
-      )}
+    <div className="space-y-2">
+      <div className="flex h-2.5 w-full rounded-full overflow-hidden gap-px bg-slate-900/50 border border-slate-800">
+        {segments.map((s) =>
+          s.pct > 0 ? (
+            <div
+              key={s.key}
+              className={`${s.color} transition-all duration-500`}
+              style={{ width: `${s.pct}%` }}
+              title={`${s.label}: ${Math.round(s.pct)}%`}
+            />
+          ) : null
+        )}
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {segments.filter(s => s.pct > 0).map((s) => (
+          <div key={s.key} className="flex items-center gap-1.5">
+            <div className={`w-2 h-2 rounded-full ${s.color}`} />
+            <span className="text-xs text-slate-400 font-heebo">{s.label}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -110,9 +121,9 @@ function KpiStrip({ statuses }: { statuses: StatusMap }) {
   const convPct  = pipeline > 0 ? Math.round((closed / pipeline) * 100) : 0;
 
   return (
-    <div className="space-y-3 mb-6">
+    <div className="space-y-4 mb-8">
       {/* 3-col on mobile, 5-col on lg+ */}
-      <div className="grid grid-cols-3 lg:grid-cols-5 gap-2">
+      <div className="grid grid-cols-3 lg:grid-cols-5 gap-3">
         <KpiCard label='סה"כ עסקים'  value={total}         accent="border-slate-800" />
         <KpiCard label="נשלחו"        value={sent}          accent="border-blue-900/60" />
         <KpiCard label="במשא ומתן"    value={nego}          accent="border-amber-900/60" />
@@ -121,19 +132,6 @@ function KpiStrip({ statuses }: { statuses: StatusMap }) {
       </div>
       {/* Pipeline bar + compact legend */}
       <PipelineBar statuses={statuses} />
-      <div className="flex gap-3 flex-wrap">
-        {STATUSES.map((s) => {
-          const count = s.value === "new"
-            ? vals.filter((v) => v === "new").length + (total - vals.length)
-            : vals.filter((v) => v === s.value).length;
-          return (
-            <span key={s.value} className="flex items-center gap-1 text-[10px] text-slate-600 font-heebo">
-              <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
-              {s.label.split(" ")[0]} {count}
-            </span>
-          );
-        })}
-      </div>
     </div>
   );
 }
@@ -309,7 +307,7 @@ function Toolbar({
   total: number; filtered: number;
 }) {
   return (
-    <div className="flex flex-col gap-2.5 mb-5">
+    <div className="flex flex-col gap-3.5 mb-6">
       {/* Search */}
       <div className="relative">
         <svg className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 pointer-events-none" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
@@ -329,58 +327,67 @@ function Toolbar({
         )}
       </div>
 
-      {/* Niche filter — horizontally scrollable, no wrap */}
-      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-        <div className="flex gap-1.5 w-max sm:w-auto sm:flex-wrap">
-          {NICHE_OPTIONS.map((n) => (
-            <button
-              key={n}
-              onClick={() => setNicheFilter(n)}
-              className={`text-xs font-medium px-3.5 py-2 rounded-lg border whitespace-nowrap transition-colors duration-150 font-heebo ${
-                nicheFilter === n
-                  ? "bg-white text-slate-900 border-white"
-                  : "bg-transparent text-slate-400 border-slate-800 hover:border-slate-700 hover:text-slate-300"
-              }`}
-            >
-              {n}
-            </button>
-          ))}
+      {/* Compact filters container */}
+      <div className="space-y-2">
+        {/* Niche filter — label + pills */}
+        <div className="flex flex-col gap-2">
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide font-heebo px-1">אתחום</p>
+          <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="flex gap-1.5 w-max sm:w-auto sm:flex-wrap">
+              {NICHE_OPTIONS.map((n) => (
+                <button
+                  key={n}
+                  onClick={() => setNicheFilter(n)}
+                  className={`text-xs font-medium px-3 py-1.5 rounded-full border whitespace-nowrap transition-all duration-150 font-heebo ${
+                    nicheFilter === n
+                      ? "bg-slate-700 text-white border-slate-600 shadow-md shadow-slate-900/30"
+                      : "bg-slate-900/50 text-slate-400 border-slate-800/50 hover:border-slate-700 hover:text-slate-300"
+                  }`}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Status filter — horizontally scrollable, no wrap */}
-      <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-        <div className="flex gap-1.5 w-max sm:w-auto sm:flex-wrap">
-          {([{ value: "הכל", label: "כל הסטטוסים" }, ...STATUSES.map(s => ({ value: s.value, label: s.label }))] as { value: string; label: string }[]).map((s) => (
-            <button
-              key={s.value}
-              onClick={() => setStatusFilter(s.value as "הכל" | Status)}
-              className={`text-xs font-medium px-3.5 py-2 rounded-lg border whitespace-nowrap transition-colors duration-150 font-heebo ${
-                statusFilter === s.value
-                  ? "bg-slate-700 text-white border-slate-600"
-                  : "bg-transparent text-slate-500 border-slate-800 hover:border-slate-700 hover:text-slate-400"
-              }`}
-            >
-              {s.label}
-            </button>
-          ))}
+        {/* Status filter — label + pills */}
+        <div className="flex flex-col gap-2">
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide font-heebo px-1">סטטוס</p>
+          <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="flex gap-1.5 w-max sm:w-auto sm:flex-wrap">
+              {([{ value: "הכל", label: "כל הסטטוסים" }, ...STATUSES.map(s => ({ value: s.value, label: s.label }))] as { value: string; label: string }[]).map((s) => (
+                <button
+                  key={s.value}
+                  onClick={() => setStatusFilter(s.value as "הכל" | Status)}
+                  className={`text-xs font-medium px-3 py-1.5 rounded-full border whitespace-nowrap transition-all duration-150 font-heebo ${
+                    statusFilter === s.value
+                      ? "bg-slate-700 text-white border-slate-600 shadow-md shadow-slate-900/30"
+                      : "bg-slate-900/50 text-slate-400 border-slate-800/50 hover:border-slate-700 hover:text-slate-300"
+                  }`}
+                >
+                  {s.label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Results count */}
-      {(search || nicheFilter !== "הכל" || statusFilter !== "הכל") && (
-        <div className="flex items-center justify-between">
-          <p className="text-xs text-slate-600 font-heebo">
-            {filtered === total ? `${total} עסקים` : `${filtered} מתוך ${total}`}
-          </p>
-          <button
-            onClick={() => { setSearch(""); setNicheFilter("הכל"); setStatusFilter("הכל"); }}
-            className="text-xs text-slate-600 hover:text-slate-400 font-heebo transition-colors"
-          >
-            נקה סינון ×
-          </button>
-        </div>
-      )}
+        {/* Results count + clear button */}
+        {(search || nicheFilter !== "הכל" || statusFilter !== "הכל") && (
+          <div className="flex items-center justify-between pt-2">
+            <p className="text-xs text-slate-500 font-heebo">
+              {filtered === total ? `${total} עסקים` : `${filtered} מתוך ${total}`}
+            </p>
+            <button
+              onClick={() => { setSearch(""); setNicheFilter("הכל"); setStatusFilter("הכל"); }}
+              className="text-xs text-slate-500 hover:text-slate-300 font-heebo transition-colors font-semibold"
+            >
+              ✕ נקה
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
