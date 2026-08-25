@@ -174,7 +174,7 @@ ${pageUrl}
   const waHref = `https://wa.me/${toWaPhone(lead.contact.phone)}?text=${encodeURIComponent(waMessage)}`;
 
   return (
-    <article className="group relative bg-slate-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden hover:border-slate-700 transition-colors duration-150 transform-gpu contain-content">
+    <article className="group relative bg-slate-900 border border-slate-800 rounded-2xl flex flex-col overflow-visible hover:border-slate-700 transition-colors duration-150 transform-gpu contain-content">
 
       {/* Colored top accent line by niche */}
       <div className={`h-0.5 w-full ${
