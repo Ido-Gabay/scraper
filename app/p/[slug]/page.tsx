@@ -9,7 +9,11 @@ export default async function LeadPage({ params }: Props) {
   const { slug } = await params;
   const lead = (pagesData as PageData[]).find((p) => p.slug === slug);
   if (!lead) notFound();
-  return <DynamicNicheRenderer lead={lead} />;
+  return (
+    <>
+      <DynamicNicheRenderer lead={lead} />
+    </>
+  );
 }
 
 export function generateStaticParams() {
