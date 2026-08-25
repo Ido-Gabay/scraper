@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { BusinessStatus } from '@/lib/supabaseClient';
 
@@ -69,7 +69,7 @@ export function StatusSelector({
     setMounted(true);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     updateMenuPosition();
   }, [open, updateMenuPosition]);
 
@@ -183,7 +183,7 @@ export function StatusSelector({
       {/* Dropdown Menu — Rendered via Portal to avoid overflow: hidden */}
       {mounted && open && createPortal(
         <div
-          className="fixed z-50 min-w-max animate-in fade-in slide-in-from-top-2 duration-150"
+          className="fixed z-50 min-w-max"
           style={{
             top: `${menuPosition.top}px`,
             left: `${menuPosition.left}px`,
