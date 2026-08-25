@@ -331,7 +331,7 @@ function Toolbar({
       <div className="space-y-2">
         {/* Niche filter — label + pills */}
         <div className="flex flex-col gap-2">
-          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide font-heebo px-1">אתחום</p>
+          <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide font-heebo px-1">תחום</p>
           <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
             <div className="flex gap-1.5 w-max sm:w-auto sm:flex-wrap">
               {NICHE_OPTIONS.map((n) => (
