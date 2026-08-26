@@ -16,8 +16,6 @@ type StatusMap = Record<string, Status>;
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
-const PAGE_SIZE = 12;
-
 const STATUSES: { value: Status; label: string; dot: string; ring: string }[] = [
   { value: "new",         label: "חדש",            dot: "bg-slate-400",   ring: "ring-slate-400/30"   },
   { value: "sent",        label: "נשלח ללקוח",     dot: "bg-blue-400",    ring: "ring-blue-400/30"    },
@@ -384,44 +382,6 @@ function Toolbar({
   );
 }
 
-// ─── Pagination ───────────────────────────────────────────────────────────────
-
-function Pagination({ page, totalPages, onPage }: { page: number; totalPages: number; onPage: (p: number) => void }) {
-  if (totalPages <= 1) return null;
-  return (
-    <div className="flex items-center justify-center gap-1.5 mt-10 font-heebo">
-      <button
-        onClick={() => onPage(page - 1)} disabled={page === 1}
-        className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 text-sm font-medium disabled:opacity-25 disabled:cursor-not-allowed hover:bg-slate-800 hover:text-slate-200 transition-colors"
-      >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
-        קודם
-      </button>
-      <div className="flex gap-1">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-          <button
-            key={p} onClick={() => onPage(p)}
-            className={`w-9 h-9 rounded-xl text-sm font-semibold transition-colors ${
-              p === page
-                ? "bg-white text-slate-900"
-                : "bg-slate-900 border border-slate-800 text-slate-500 hover:bg-slate-800 hover:text-slate-300"
-            }`}
-          >
-            {p}
-          </button>
-        ))}
-      </div>
-      <button
-        onClick={() => onPage(page + 1)} disabled={page === totalPages}
-        className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-400 text-sm font-medium disabled:opacity-25 disabled:cursor-not-allowed hover:bg-slate-800 hover:text-slate-200 transition-colors"
-      >
-        הבא
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-      </button>
-    </div>
-  );
-}
-
 // ─── Admin Page ───────────────────────────────────────────────────────────────
 
 export default function AdminPage() {
@@ -430,7 +390,6 @@ export default function AdminPage() {
   const [nicheFilter, setNicheFilter]     = useState("הכל");
   const [statusFilter, setStatusFilter]   = useState<"הכל" | Status>("הכל");
   const [origin, setOrigin]               = useState("");
-  const [page, setPage]                   = useState(1);
   const [supabaseReady, setSupabaseReady] = useState(false);
   const [saving, setSaving]               = useState(false);
 
@@ -488,10 +447,6 @@ export default function AdminPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, nicheFilter, statusFilter, statuses]);
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  useEffect(() => { setPage(1); }, [search, nicheFilter, statusFilter]);
-  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
   return (
     <div className="min-h-screen bg-[#0a0a0f] text-white font-heebo" dir="rtl">
 
@@ -548,7 +503,7 @@ export default function AdminPage() {
         />
 
         {/* Grid */}
-        {paginated.length === 0 ? (
+        {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-3 text-slate-600">
             <svg className="w-12 h-12 opacity-30" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -561,7 +516,7 @@ export default function AdminPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {paginated.map((lead) => (
+            {filtered.map((lead) => (
               <BusinessCard
                 key={lead.slug}
                 lead={lead}
@@ -572,9 +527,6 @@ export default function AdminPage() {
             ))}
           </div>
         )}
-
-        {/* Pagination */}
-        <Pagination page={page} totalPages={totalPages} onPage={setPage} />
 
       </main>
     </div>
